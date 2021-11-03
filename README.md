@@ -1,6 +1,6 @@
 # apres
 
-APerture REconstruction Suite
+**AP**erture **RE**construction **S**uite
 
 ## Purpose
 
