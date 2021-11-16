@@ -8,17 +8,20 @@ def curvilinear2cartesian(data, R_0):
     data['y'] = data['r']*np.sin(data['theta'])
 
 
-def cartesian2curvilinear(x, y, z, R_0=0, ccw=1, dphi=0):
+def cartesian2curvilinear(x, y, z, R_0=0, ccw=1, dphi=0,x0=0,y0=0,z0=0):
     """return toroidal/curvilinear coordinates from cartesian coordinates
     https://en.wikipedia.org/wiki/Toroidal_and_poloidal_coordinates"""
-    R = np.sqrt(x**2+y**2)
-    phi = np.arctan2(y, x)
+    dx = x-x0
+    dy = y-y0
+    dz = z-z0
+    R = np.sqrt(dx**2+dy**2)
+    phi = np.arctan2(dy, dx)
 
     if callable(R_0):
         R_0 = R_0(phi)
 
-    r = np.sqrt(z**2+(R-R_0)**2)
-    theta = np.arctan2(z, R-R_0)
+    r = np.sqrt(dz**2+(R-R_0)**2)
+    theta = np.arctan2(dz, R-R_0)
 
     th = ccw*(phi-dphi)
     th[th < 0] += 2*np.pi
