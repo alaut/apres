@@ -28,3 +28,25 @@ def cartesian2curvilinear(x, y, z, R_0=0, ccw=1, dphi=0):
     v = r*np.sin(theta)
 
     return {'r': r, 'theta': theta, 'phi': phi, 's': s, 'h': h, 'v': v}
+
+def scalar_triple_product(a, b, c, verbose=False):
+    """return the scalar triple product of vectors a, b, and c"""
+    if verbose:
+        print(f'stp ~ {a.shape} * ( {b.shape} x {c.shape} )')
+
+    # classic approach
+    base = np.cross(b, c, axisa=0, axisb=0, axis=0)
+    stp = np.sum(a*base, axis=0)
+    if verbose:
+        print(f'stp: {stp.nbytes/1e6} MB')
+
+    return stp
+
+
+def tetra_volume_sign(a, b, c, d, verbose=False):
+    """return positivity of tetrahedra volume defined by vertices a, b, c, d
+    https://en.wikipedia.org/wiki/Tetrahedron"""
+    sign = np.sign(scalar_triple_product(a-d, b-d, c-d)) == 1
+    if verbose:
+        print(f'sign: {sign.nbytes/1e6} MB')
+    return sign
