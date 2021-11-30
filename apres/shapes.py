@@ -59,7 +59,7 @@ class IrregularRoundedPolygon():
 
         # iterate over sectors
         for i in range(self.phi_m.size):
-            print('sector: {:}'.format(i))
+            # print('sector: {:}'.format(i))
 
             theta = phi - self.phi_m[i]
             psi = phi - self.phi_d[i]
