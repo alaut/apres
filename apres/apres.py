@@ -34,18 +34,22 @@ class Aperture:
             print('Loading {:} ...'.format(file))
             self.tri[file] = mesh.Mesh.from_file(file)
 
-    def show(self, KEYS=[('x', 'y')]):
+    def show(self, keys=[('x', 'y')]):
 
-        if self.reference is not None:
-            phi = np.linspace(0, 2*np.pi, 100_000)
+        phi = np.linspace(0, 2*np.pi, 100_000)
 
-            r = {
-                'x': self.reference(phi)*np.cos(phi),
-                'y': self.reference(phi)*np.sin(phi),
-                'z': np.zeros(phi.shape),
-            }
+        if callable(self.reference):
+            R_0 = self.reference(phi)
+        else:
+            R_0 = self.reference
 
-        for k1, k2 in KEYS:
+        r = {
+            'x': self.origin[0]+R_0*np.cos(phi),
+            'y': self.origin[1]+R_0*np.sin(phi),
+            'z': self.origin[2]+np.zeros(phi.shape),
+        }
+
+        for k1, k2 in keys:
             fig, ax = plt.subplots(constrained_layout=True)
             ax.set_aspect('equal')
             ax.set_xlabel(k1)
@@ -56,7 +60,6 @@ class Aperture:
                 ax.plot(x1, x2, ',', label=name)
                 # ax.annotate(text=name, xy=(np.mean(x1), np.mean(x2)))
 
-            if self.reference is not None:
                 ax.plot(r[k1], r[k2], 'm-')
 
     def linearize(self):
@@ -77,7 +80,7 @@ class Aperture:
             tri.x, tri.y, tri.z = data['h'].T, data['v'].T, data['s'].T
             self.tri[file] = tri
 
-        self.reference = None
+        self.reference = 0
 
     def inflate(self):
 
