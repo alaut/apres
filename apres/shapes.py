@@ -83,7 +83,7 @@ class IrregularRoundedPolygon():
 
             ind += ind_d
 
-        return {'R': r, 'drifts': ind}
+        return r
 
 @dataclass
 class RegularRoundedPolygon:

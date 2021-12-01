@@ -21,6 +21,7 @@ class Aperture:
     nz: int = 100
     nth: int = 4
     rmax: float = 1000
+    dphi: float = 0
 
     intersections = {}
     tri = {}
@@ -34,9 +35,7 @@ class Aperture:
             print('Loading {:} ...'.format(file))
             self.tri[file] = mesh.Mesh.from_file(file)
 
-    def show(self, keys=[('x', 'y')]):
-
-        phi = np.linspace(0, 2*np.pi, 100_000)
+    def show(self, keys=[('x', 'y')], phi = np.linspace(0, 2*np.pi, 100_000), equal=True):
 
         if callable(self.reference):
             R_0 = self.reference(phi)
@@ -50,15 +49,17 @@ class Aperture:
         }
 
         for k1, k2 in keys:
-            fig, ax = plt.subplots(constrained_layout=True)
-            ax.set_aspect('equal')
+            fig, ax = plt.subplots(
+                num=f"tri: {k1}-{k2}", constrained_layout=True)
+            if equal:
+                ax.set_aspect('equal')
             ax.set_xlabel(k1)
             ax.set_ylabel(k2)
             for name, tri in self.tri.items():
                 x1 = getattr(tri, k1).ravel()
                 x2 = getattr(tri, k2).ravel()
                 ax.plot(x1, x2, ',', label=name)
-                # ax.annotate(text=name, xy=(np.mean(x1), np.mean(x2)))
+                ax.annotate(text=name, xy=(np.mean(x1), np.mean(x2)))
 
                 ax.plot(r[k1], r[k2], 'm-')
 
@@ -74,7 +75,7 @@ class Aperture:
                 z=tri.z.T,
                 R_0=self.reference,
                 ccw=-1,
-                dphi=0,
+                dphi=self.dphi,
             )
 
             tri.x, tri.y, tri.z = data['h'].T, data['v'].T, data['s'].T
@@ -96,22 +97,25 @@ class Aperture:
             np.save(f"{file}", r)
             self.intersections[file] = r
 
-    def plot_aperture(self):
-        keys = [('z', 'x'), ('z', 'y')]
+    def plot_aperture(self, keys=[('z', 'x'), ('z', 'y')]):
+        """plot reconstructed aperture against mesh"""
 
-        fig, axes = plt.subplots(
-            len(keys), 1, constrained_layout=True, num='aperture', sharex=True)
+        axes = []
+        for k1, k2 in keys:
+            fig, ax = plt.subplots(
+                num=f"aperture: {k1}-{k2}", constrained_layout=True)
+            # ax.set_aspect('equal')
+            ax.set_xlabel(k1)
+            ax.set_ylabel(k2)
+            axes.append(ax)
 
         for file, tri in self.tri.items():
             r = self.intersections[file]
-
             hits = {'x': r[0, 0].T, 'y': r[1, 0].T, 'z': r[2, 0].T}
-            data = {'x': tri.x.T, 'y': tri.y.T, 'z': tri.z.T}
+            mesh = {'x': tri.x.T, 'y': tri.y.T, 'z': tri.z.T}
 
-            plot_projections(data, keys=keys, axes=axes,
-                             style='mesh', equal=True)
-            plot_projections(hits, keys=keys, axes=axes,
-                             style='line', spec='-')
+            plot_projections(mesh, keys, axes, style='mesh')
+            plot_projections(hits, keys, axes, style='line', spec='-')
             # axes[0].set_title(file)
 
     def define_rays(self, p):

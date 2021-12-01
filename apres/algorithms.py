@@ -24,7 +24,7 @@ def compute_intersections(q, p, step=200):
 
     return r
 
-def intersect_line_triangle(q, p, tails=True, plot=False, dtype=None, step=200, fast=True):
+def intersect_line_triangle(q, p, tails=True, dtype=None, fast=True):
     """calculate intersection between n rays (q) and m faces (p) using Moller-Trumbore algorithm
     inputs:
         q: [2 x 3 x n1 x n2 x ...] rays where nr = prod(n1, n2, ...)

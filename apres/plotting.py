@@ -1,44 +1,25 @@
-import matplotlib.pyplot as plt
-import numpy as np
-
 from matplotlib.tri import Triangulation
+import numpy as np
+import matplotlib.pyplot as plt
 
-def plot_projections(data, keys, num=None, axes=None, equal=False, style='mesh', spec='k,'):
-    """construct subplots from data dictionary and list of key tuples
 
-    inputs:
-        data: dictionary of plotable mesh vertices
-        keys: list of tuples describing axes bases
-
-    optional:
-        num: None
-        axes: None
-        equal: False
-        style: 'mesh
-
-    ouputs:
-        axes:"""
+def plot_projections(data, keys, axes=None, equal=False, style='mesh', spec='k,'):
+    """plot dataset projections given data dict and list of key pairs"""
 
     if axes is None:
-        if True:
-            fig, axes = plt.subplots(
-                len(keys), 1, num=num, constrained_layout=True)
-            if len(keys) == 1:
-                axes = [axes]
-        else:
-            axes = []
-            for (k1, k2) in keys:
-                fig, ax = plt.subplots(
-                    num='{:}-{:}-{:}'.format(k1, k2, num), constrained_layout=True)
-                axes.append(ax)
-
-        for ax, (k1, k2) in zip(axes, keys):
+        axes = []
+        for (k1, k2) in keys:
+            fig, ax = plt.subplots(
+                num=f'projection: {k1}-{k2}', constrained_layout=True)
             ax.set_xlabel(k1)
             ax.set_ylabel(k2)
-            if equal:
-                ax.set_aspect('equal')
+            axes.append(ax)
+
+        if equal:
+            ax.set_aspect('equal')
 
     for ax, (k1, k2) in zip(axes, keys):
+
         if style == 'points':
             ax.plot(data[k1].ravel(), data[k2].ravel(), spec)
         elif style == 'mesh':
