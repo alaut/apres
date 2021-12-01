@@ -110,41 +110,51 @@ class RegularRoundedPolygon:
 
     def __post__init__(self):
 
-        alpha = 2*np.pi/n  # sector angle
+        # sector angle
+        self.alpha = 2*np.pi/self.n
 
-        L = 2*np.pi*(R-rho)/n  # straight length
-        l = 2*np.pi*rho/n  # bend length
+        # straight length
+        L = 2*np.pi*(self.R-self.rho)/self.n
 
-        s = np.sqrt(2*rho**2*(1-np.cos(alpha)))  # bend cord length
+        # bend length
+        l = 2*np.pi*self.rho/self.n
+
+        # bend cord length
+        s = np.sqrt(2*self.rho**2*(1-np.cos(self.alpha)))
+
         # cropped corner edge length
-        b = np.abs(s*np.sin(alpha/2)/np.sin(alpha))
+        b = np.abs(s*np.sin(self.alpha/2)/np.sin(self.alpha))
 
-        h = (b+L/2)/np.tan(alpha/2)
+        self.h = (b+L/2)/np.tan(self.alpha/2)
 
-        gamma = 2*np.arctan(L/(2*h))    # drift angle
-        beta = alpha-gamma  # bend angle
+        # drift angle
+        self.gamma = 2*np.arctan(L/(2*self.h))
 
-        delta = (alpha-beta)/2
-        k = rho*np.sin(delta)/np.sin(beta/2)
+        # bend angle
+        self.beta = self.alpha-self.gamma
 
-        if verbose:
+        delta = (self.alpha-self.beta)/2
+        self.k = self.rho*np.sin(delta)/np.sin(self.beta/2)
+
+        if self.verbose:
             print('L: {:0.2f}'.format(L))
             print('l: {:0.2f}'.format(l))
-            print('alpha: {:0.2f} deg'.format(np.degrees(alpha)))
-            print('beta:  {:0.2f} deg'.format(np.degrees(beta)))
-            print('gamma: {:0.2f} deg'.format(np.degrees(gamma)))
+            print('alpha: {:0.2f} deg'.format(np.degrees(self.alpha)))
+            print('beta:  {:0.2f} deg'.format(np.degrees(self.beta)))
+            print('gamma: {:0.2f} deg'.format(np.degrees(self.gamma)))
 
-    def radius(phi):
-        psi = (phi + dphi) % alpha  # subsector angle
+    def radius(self, phi):
+        psi = (phi + self.dphi) % self.alpha
 
-        theta = psi-gamma/2
-        vphi = psi-beta/2-gamma
+        theta = psi-self.gamma/2
+        vphi = psi-self.beta/2-self.gamma
 
-        r_drift = h/np.cos(theta)
-        r_bend = k*np.cos(vphi) + np.sqrt(k**2*np.cos(vphi)**2 - k**2+rho**2)
+        r_drift = self.h/np.cos(theta)
+        r_bend = self.k*np.cos(vphi) + np.sqrt(self.k **
+                                               2*np.cos(vphi)**2 - self.k**2+self.rho**2)
 
         r_drift[np.isnan(r_drift)] = 0
         r_bend[np.isnan(r_bend)] = 0
-        r = r_drift*(psi <= gamma) + r_bend*(psi > gamma)
+        r = r_drift*(psi <= self.gamma) + r_bend*(psi > self.gamma)
 
-        return r, psi <= gamma
+        return r, psi <= self.gamma
