@@ -1,7 +1,6 @@
 ---
 layout: home
 title: apres
-description: Aperture REconstruction Suite
 ---
 
 # apres

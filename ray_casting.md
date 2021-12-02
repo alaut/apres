@@ -24,7 +24,7 @@ p_{3,x} & p_{3,y} & p_{3,z} \\
 
 The interaction between a ray and a face can be defined as __intersecting__ and __non-intersecting__:
 
-![signed_volumes](../assets/moller_trumbore.drawio.svg)
+![signed_volumes](./figs/moller_trumbore.drawio.svg)
 
 The volume of a tetrahedron is defined by:
 
@@ -64,8 +64,8 @@ $$t = \frac{(p_1-q_1) \cdot n}{(q_2-q_1) \cdot n}$$
 
 And example of the algorithm tracing through a spherical shell can be realized as follows:
 
-![Rays traced through a spherical shell](../assets/shell.png)
+![Rays traced through a spherical shell](./figs/shell.png)
 
 We can also apply to more complicated shapes
 
-![Horned Volute](../assets/volute.png)
+![Horned Volute](./figs/volute.png)
