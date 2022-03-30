@@ -5,7 +5,7 @@ title: apres
 
 ## Introduction
 
-The __apres (**AP**erture **RE**construction **S**uite)__ package facilitates the automated reconstruction of mechanical apertures in accelerating rings and linacs alike. By leveraging the detailed and updated mechanical modeling from the CAD team, electrical apertures can be automatically reconstructed with the addition or replacement of new hardware along the beamline.
+The __apres__ (**AP**erture **RE**construction **S**uite) package facilitates the automated reconstruction of mechanical apertures in accelerating rings and linacs alike. By leveraging the detailed and updated mechanical modeling from the CAD team, electrical apertures can be automatically reconstructed with the addition or replacement of new hardware along the beamline.
 
 ## Implementation
 
