@@ -1,6 +1,6 @@
 ---
-layout: default
-title: apres
+layout: home
+title: Home
 ---
 
 ## Introduction
